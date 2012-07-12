@@ -225,7 +225,6 @@ module Slugalicious
           active: true,
           scope: self.class._slug_scope.try(:call, self))
       end
-      unmemoize_all
       return
     end
 
