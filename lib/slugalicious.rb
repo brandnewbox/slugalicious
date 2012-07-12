@@ -196,6 +196,11 @@ module Slugalicious
 
   private
 
+  def clear_cached_slugs
+    Rails.cache.delete("Slug/#{self.class.to_s}/#{id}/slug")
+    Rails.cache.delete("Slug/#{self.class.to_s}/#{id}/slug_with_path")
+  end
+
   def make_slug
     slugs_in_use = if slugs.loaded? then
                      slugs.map(&:slug)
@@ -225,6 +230,7 @@ module Slugalicious
           active: true,
           scope: self.class._slug_scope.try(:call, self))
       end
+      clear_cached_slugs
       return
     end
 
