@@ -221,8 +221,11 @@ module Slugalicious
     unless valid_slugs_in_use.empty?
       Slug.transaction do
         slugs.update_all(active: false)
-        slugs.where(slug: valid_slugs_in_use.first).update_all(active: true)
+        slugs.where(slug: valid_slugs_in_use.first).update_all(
+          active: true,
+          scope: self.class._slug_scope.try(:call, self))
       end
+      unmemoize_all
       return
     end
 
